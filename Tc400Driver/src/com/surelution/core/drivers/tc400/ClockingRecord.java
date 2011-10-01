@@ -40,4 +40,18 @@ public class ClockingRecord implements Serializable {
 	public Date getDate() {
 		return date;
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("ID:");
+		sb.append(id);
+		sb.append(";PersonId:");
+		sb.append(personID);
+		sb.append(",status:");
+		sb.append(status);
+		sb.append(",date:");
+		sb.append(date);
+		return sb.toString();
+	}
 }

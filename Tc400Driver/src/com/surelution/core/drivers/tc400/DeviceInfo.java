@@ -1,6 +1,6 @@
 package com.surelution.core.drivers.tc400;
 
-public class DeviceInfo {
+class DeviceInfo {
 
 	public int ID;
 	public int MajorVersion;
