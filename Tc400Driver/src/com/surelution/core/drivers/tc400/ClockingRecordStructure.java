@@ -2,7 +2,7 @@ package com.surelution.core.drivers.tc400;
 
 import com.sun.jna.Structure;
 
-public class ClockingRecord extends Structure {
+public class ClockingRecordStructure extends Structure {
 
 	public int  ID; // ¿¼ÇÚ»úÐòÁÐºÅ
 	public int  PersonID;
