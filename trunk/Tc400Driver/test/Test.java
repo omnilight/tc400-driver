@@ -3,8 +3,6 @@ import com.surelution.core.drivers.tc400.Kernel32Library;
 import com.surelution.core.drivers.tc400.LibraryFactory;
 import com.surelution.core.drivers.tc400.Tc400Library;
 
-
-
 public class Test {
 
 	private static final int RetCount = 0;
@@ -17,27 +15,38 @@ public class Test {
 		tc400.CKT_GetMachineNumber(0, mmid);
 		System.out.println(new String(mmid));
 
-		int[] pLongRun = new int[65536];
-		if (tc400.CKT_GetClockingRecordEx(0, pLongRun) == 1) {
+		int[] pLongRun = new int[1];
+		if (tc400.CKT_GetClockingNewRecordEx(0, pLongRun) == 1) {
 			while (true) {
-				int[] pClockings = new int[256];
-				int[] RecordCount = new int[256];
+				int[] pClockings = new int[1];
+				int[] RecordCount = new int[1];
+				int[] pRetCount = new int[1];
 				ClockingRecord clocking = new ClockingRecord();
-				if (tc400.CKT_GetClockingRecordProgress(pLongRun, RecordCount,
-						RetCount, pClockings) != 0) {
+				if (tc400.CKT_GetClockingRecordProgress(pLongRun[0],
+						RecordCount, pRetCount, pClockings) != 0) {
 					int ptemp = clocking.size();
-					for (int i = 0; i < RetCount; i++) {
-//						kernel32.RtlMoveMemory(clocking, pClockings, ptemp);
-//						pClockings = pClockings + ptemp;
-//						String[] hu = { String.valueOf(i),
-//								String.valueOf(clocking.PersonID),
-//								new String(clocking.Time),
-//								String.valueOf(clocking.Stat),
-//								String.valueOf(clocking.ID) };
-//						System.out.println(hu);
+					for (int i = 0; i < pRetCount[0]; i++) {
+						kernel32.RtlMoveMemory(clocking, pClockings[0], ptemp);
+						pClockings[0] = pClockings[0] + ptemp;
+						String s = String.valueOf(clocking.PersonID)
+								+ new String(clocking.Time)
+								+ String.valueOf(clocking.Stat)
+								+ String.valueOf(clocking.ID);
+						StringBuffer sb = new StringBuffer("person id:");
+						sb.append(clocking.PersonID);
+						sb.append(";time:");
+						byte[] time = clocking.Time;
+						for(byte c : time) {
+							sb.append((char)c);
+						}
+						sb.append(";stat:");
+						sb.append(clocking.Stat);
+						sb.append(";id:");
+						sb.append(clocking.ID);
+						System.out.println(sb);
 					}
-					if (ptemp != 0)
-						tc400.CKT_FreeMemory(ptemp);
+//					if (ptemp != 0)
+//						tc400.CKT_FreeMemory(ptemp);
 					break;
 				}
 			}
