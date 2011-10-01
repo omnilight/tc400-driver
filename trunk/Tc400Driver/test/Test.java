@@ -1,11 +1,9 @@
-import com.surelution.core.drivers.tc400.ClockingRecord;
+import com.surelution.core.drivers.tc400.ClockingRecordStructure;
 import com.surelution.core.drivers.tc400.Kernel32Library;
 import com.surelution.core.drivers.tc400.LibraryFactory;
 import com.surelution.core.drivers.tc400.Tc400Library;
 
 public class Test {
-
-	private static final int RetCount = 0;
 
 	public static void main(String[] args) {
 		Tc400Library tc400 = LibraryFactory.createTc400Library();
@@ -21,7 +19,7 @@ public class Test {
 				int[] pClockings = new int[1];
 				int[] RecordCount = new int[1];
 				int[] pRetCount = new int[1];
-				ClockingRecord clocking = new ClockingRecord();
+				ClockingRecordStructure clocking = new ClockingRecordStructure();
 				if (tc400.CKT_GetClockingRecordProgress(pLongRun[0],
 						RecordCount, pRetCount, pClockings) != 0) {
 					int ptemp = clocking.size();
