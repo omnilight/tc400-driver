@@ -14,7 +14,7 @@ public interface Tc400Library extends Library{
 	 
 	 public int CKT_ReadRealtimeClocking(int[] ppClockings);
 	 
-	 public int CKT_GetClockingRecordEx(int Sno, int[] ppLongRun);
+	 public int CKT_GetClockingNewRecordEx(int Sno, int[] ppLongRun);
 	 
-	 public int CKT_GetClockingRecordProgress(int[] pLongRun, int[] pRecCount, int pRetCount, int[] ppPersons);
+	 public int CKT_GetClockingRecordProgress(int pLongRun, int[] pRecCount, int[] pRetCount, int[] ppPersons);
 }
