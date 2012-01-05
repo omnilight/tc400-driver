@@ -64,34 +64,49 @@ public class Timer {
 			
 			} while(ret == 2);
 			tc400.CKT_ClearClockingRecord(0, 1, 0);
-//			if (tc400.CKT_GetClockingRecordProgress(pLongRun[0], RecordCount,
-//					pRetCount, pClockings) == 2) {
-//				int ptemp = clocking.size();
-//				for (int i = 0; i < pRetCount[0]; i++) {
-//					kernel32.RtlMoveMemory(clocking, pClockings[0], ptemp);
-//					pClockings[0] = pClockings[0] + ptemp;
-//					StringBuffer dateString = new StringBuffer();
-//					for (int j = 0; j < 19; j++) {
-//						dateString.append((char) clocking.Time[j]);
-//					}
-//					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//					Date date;
-//					try {
-//						date = sdf.parse(dateString.toString());
-//						ClockingRecord cr = new ClockingRecord(clocking.ID,
-//								date, clocking.Stat, clocking.PersonID);
-//						record.add(cr);
-//					} catch (ParseException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//				
-//				tc400.CKT_FreeMemory(pClockings[0]);
-//			}
-			
-			
 		}
 
 		return record;
+	}
+	
+	public List<PersonInfo> getAllPeople() {
+		List<PersonInfo> people = new ArrayList<PersonInfo>();
+		
+
+		int[] pLongRun = new int[1];
+		int[] pPeople = new int[1];
+		int[] RecordCount = new int[1];
+		int[] pRetCount = new int[1];
+		if (tc400.CKT_ListPersonInfoEx(0, pLongRun) == 1) {
+			while (true)
+            {
+                if ( tc400.CKT_ListPersonProgress(pLongRun[0],RecordCount,pRetCount,pPeople) != 0)
+                {
+                    if (RecordCount[0] > 0 ) 
+                    {
+//                        ProgressBar1.Maximum = RetCount;
+                    }
+
+                    PersonInfoStructure person = new PersonInfoStructure();
+    				int ptemp = person.size();
+//                    ptemp = Marshal.SizeOf(person);
+                    for (int i = 0;i < pRetCount[0];i++)
+                    {
+                    	kernel32.RtlMoveMemory(person,pPeople[0],ptemp);
+                    	pPeople[0] = pPeople[0] + ptemp;
+//                        int num = ListView2.Items.Count;
+                        String[] hu = {String.valueOf(i),  String.valueOf(person.PersonID), new String(person.Name), new String(person.Password), String.valueOf(person.CardNo) };
+                        
+                        System.out.println(hu);
+//                        ListView2.Items.Insert(num, new ListViewItem(hu));
+//                        ProgressBar1.Value += 1;
+                    }
+                    if (ptemp != 0 )tc400.CKT_FreeMemory(ptemp);
+                    break;
+                }
+            }
+		}
+		
+		return people;
 	}
 }

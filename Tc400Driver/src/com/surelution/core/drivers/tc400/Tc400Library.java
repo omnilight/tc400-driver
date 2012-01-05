@@ -25,4 +25,8 @@ interface Tc400Library extends Library{
 	 public int CKT_GetCounts(int sno, int[] cPersons, int[] cFPs, int[] cClockings);
 	 
 	 public int CKT_ClearClockingRecord(int sno, int type, int count);
+	 
+	 public int CKT_ListPersonInfoEx(int Sno, int[] ppLongRun);
+	 
+	 public int CKT_ListPersonProgress(int pLongRun, int[] pRecCount, int[] pRetCount, int[] ppPersons);
 }

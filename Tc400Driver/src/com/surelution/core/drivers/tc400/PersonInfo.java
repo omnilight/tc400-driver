@@ -1,7 +1,10 @@
 package com.surelution.core.drivers.tc400;
 
-import com.sun.jna.Structure;
+import java.io.Serializable;
 
-class PersonInfo extends Structure {
+public class PersonInfo implements Serializable {
 
+	private static final long serialVersionUID = 7684596969043112410L;
+
+	
 }
