@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
+
 public class Timer {
 
 	private static Tc400Library tc400 = LibraryFactory.createTc400Library();
@@ -71,7 +74,6 @@ public class Timer {
 	
 	public List<PersonInfo> getAllPeople() {
 		List<PersonInfo> people = new ArrayList<PersonInfo>();
-		
 
 		int[] pLongRun = new int[1];
 		int[] pPeople = new int[1];
@@ -82,27 +84,12 @@ public class Timer {
             {
                 if ( tc400.CKT_ListPersonProgress(pLongRun[0],RecordCount,pRetCount,pPeople) != 0)
                 {
-                    if (RecordCount[0] > 0 ) 
-                    {
-//                        ProgressBar1.Maximum = RetCount;
-                    }
-
                     PersonInfoStructure person = new PersonInfoStructure();
     				int ptemp = person.size();
-//                    ptemp = Marshal.SizeOf(person);
                     for (int i = 0;i < pRetCount[0];i++)
                     {
                     	kernel32.RtlMoveMemory(person,pPeople[0],ptemp);
                     	pPeople[0] = pPeople[0] + ptemp;
-//                        int num = ListView2.Items.Count;
-//                        String[] hu = {String.valueOf(i),  String.valueOf(person.PersonID), new String(person.Name), 
-//                        		new String(person.Password), String.valueOf(person.CardNo) };
-//                        System.out.println("String.valueOf(i):" + String.valueOf(i));
-//                        System.out.println("String.valueOf(person.PersonID):" + String.valueOf(person.PersonID));
-//                        System.out.println("new String(person.Name):" + getString(person.Name));
-//                        System.out.println("new String(person.Password):" + new String(person.Password));
-//                        System.out.println("String.valueOf(person.CardNo):" + String.valueOf(person.CardNo));
-//                        System.out.println(hu);
                         PersonInfo pi = new PersonInfo();
                         pi.setId(String.valueOf(person.PersonID));
                         pi.setName(getString(person.Name));
@@ -113,8 +100,6 @@ public class Timer {
                         	pi.setFp2Available(true);
                         }
                         people.add(pi);
-//                        ListView2.Items.Insert(num, new ListViewItem(hu));
-//                        ProgressBar1.Value += 1;
                     }
                     if (ptemp != 0 )tc400.CKT_FreeMemory(ptemp);
                     break;
@@ -122,6 +107,44 @@ public class Timer {
             }
 		}
 		
+		if(people != null) {
+			for(PersonInfo info : people) {
+				if(info.isFp1Available()) {
+					
+					long[] FPData = new long[1];
+					int[] FPDataLen = new int[1];
+					int ret = tc400.CKT_GetFPTemplate(0, Integer.parseInt(info.getId()), 0, FPData, FPDataLen);
+
+					System.out.println("length");
+					System.out.println(FPDataLen[0]);
+					if (ret == 3)
+					{
+					   System.out.println("CKT_GetFPTemplate fail.  Person ID: %d, Finger print ID: %d is not existed\n");
+					}
+
+					if (ret == 0)
+					{
+						System.out.println("CKT_GetFPTemplate fail.");
+					}
+
+					if (ret == 1)
+					{
+					   // FPDataLen 含指纹数据大小
+					   // FPData 指向指纹数据
+//					   if (FPData)
+//						   CKT_FreeMemory(FPData);
+						System.out.println(FPData[0] + ":" + FPDataLen[0]);
+						Pointer p = new Pointer(FPData[0]);
+						byte[] bs = p.getByteArray(0, FPDataLen[0]);
+						for(byte b : bs) {
+							System.out.print(b);
+							System.out.print(",");
+						}
+					}
+
+				}
+			}
+		}
 		return people;
 	}
 	
