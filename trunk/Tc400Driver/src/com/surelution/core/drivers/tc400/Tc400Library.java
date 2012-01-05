@@ -29,4 +29,8 @@ interface Tc400Library extends Library{
 	 public int CKT_ListPersonInfoEx(int Sno, int[] ppLongRun);
 	 
 	 public int CKT_ListPersonProgress(int pLongRun, int[] pRecCount, int[] pRetCount, int[] ppPersons);
+	 
+	 public int CKT_GetFPTemplate(int sno, int PersonID, int FPID, long[] pFPData, int[] pFPDataLen);
+	 
+	 public int CKT_PutFPTemplate(int sno, int PersonID, int FPID, byte[] pFPData, int FPDataLen);
 }
