@@ -95,9 +95,24 @@ public class Timer {
                     	kernel32.RtlMoveMemory(person,pPeople[0],ptemp);
                     	pPeople[0] = pPeople[0] + ptemp;
 //                        int num = ListView2.Items.Count;
-                        String[] hu = {String.valueOf(i),  String.valueOf(person.PersonID), new String(person.Name), new String(person.Password), String.valueOf(person.CardNo) };
-                        
-                        System.out.println(hu);
+//                        String[] hu = {String.valueOf(i),  String.valueOf(person.PersonID), new String(person.Name), 
+//                        		new String(person.Password), String.valueOf(person.CardNo) };
+//                        System.out.println("String.valueOf(i):" + String.valueOf(i));
+//                        System.out.println("String.valueOf(person.PersonID):" + String.valueOf(person.PersonID));
+//                        System.out.println("new String(person.Name):" + getString(person.Name));
+//                        System.out.println("new String(person.Password):" + new String(person.Password));
+//                        System.out.println("String.valueOf(person.CardNo):" + String.valueOf(person.CardNo));
+//                        System.out.println(hu);
+                        PersonInfo pi = new PersonInfo();
+                        pi.setId(String.valueOf(person.PersonID));
+                        pi.setName(getString(person.Name));
+                        if(person.FPMark == 1 || person.FPMark == 3) {
+                        	pi.setFp1Available(true);
+                        }
+                        if(person.FPMark == 2 || person.FPMark == 3) {
+                        	pi.setFp2Available(true);
+                        }
+                        people.add(pi);
 //                        ListView2.Items.Insert(num, new ListViewItem(hu));
 //                        ProgressBar1.Value += 1;
                     }
@@ -108,5 +123,13 @@ public class Timer {
 		}
 		
 		return people;
+	}
+	
+	private String getString(byte[] bs) {
+		StringBuffer sb = new StringBuffer();
+		for(byte b : bs) {
+			sb.append((char)b);
+		}
+		return sb.toString().trim();
 	}
 }
