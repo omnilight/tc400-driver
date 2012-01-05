@@ -36,8 +36,10 @@ public class Timer {
 			int[] RecordCount = new int[1];
 			int[] pRetCount = new int[1];
 			ClockingRecordStructure clocking = new ClockingRecordStructure();
-			if (tc400.CKT_GetClockingRecordProgress(pLongRun[0], RecordCount,
-					pRetCount, pClockings) != 0) {
+			int ret = 0;
+			do {
+				ret = tc400.CKT_GetClockingRecordProgress(pLongRun[0], RecordCount,
+						pRetCount, pClockings);
 				int ptemp = clocking.size();
 				for (int i = 0; i < pRetCount[0]; i++) {
 					kernel32.RtlMoveMemory(clocking, pClockings[0], ptemp);
@@ -57,7 +59,37 @@ public class Timer {
 						e.printStackTrace();
 					}
 				}
-			}
+				
+				tc400.CKT_FreeMemory(pClockings[0]);
+			
+			} while(ret == 2);
+			tc400.CKT_ClearClockingRecord(0, 1, 0);
+//			if (tc400.CKT_GetClockingRecordProgress(pLongRun[0], RecordCount,
+//					pRetCount, pClockings) == 2) {
+//				int ptemp = clocking.size();
+//				for (int i = 0; i < pRetCount[0]; i++) {
+//					kernel32.RtlMoveMemory(clocking, pClockings[0], ptemp);
+//					pClockings[0] = pClockings[0] + ptemp;
+//					StringBuffer dateString = new StringBuffer();
+//					for (int j = 0; j < 19; j++) {
+//						dateString.append((char) clocking.Time[j]);
+//					}
+//					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//					Date date;
+//					try {
+//						date = sdf.parse(dateString.toString());
+//						ClockingRecord cr = new ClockingRecord(clocking.ID,
+//								date, clocking.Stat, clocking.PersonID);
+//						record.add(cr);
+//					} catch (ParseException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//				
+//				tc400.CKT_FreeMemory(pClockings[0]);
+//			}
+			
+			
 		}
 
 		return record;
