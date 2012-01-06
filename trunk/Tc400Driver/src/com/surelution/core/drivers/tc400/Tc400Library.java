@@ -34,5 +34,9 @@ interface Tc400Library extends Library{
 	 
 	 public int CKT_PutFPTemplate(int sno, int PersonID, int FPID, byte[] pFPData, int FPDataLen);
 	 
-	 public int CKT_ModifyPersonInfo(int sno, PersonInfoStructure struct);
+	 public int CKT_ModifyPersonInfo(int sno, PersonInfoStructure person);
+	 
+	 public int CKT_GetDeviceClock(int so, DatetimeInfoStructure datetime);
+	 
+	 public int CKT_SetDeviceTime(int sno, byte Hour, byte Minute, byte Second);
 }
