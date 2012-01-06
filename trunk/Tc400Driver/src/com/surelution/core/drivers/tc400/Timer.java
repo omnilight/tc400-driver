@@ -112,7 +112,6 @@ public class Timer {
 				if(info.isFp1Available()) {
 					String fp = getFingerPrint(Integer.parseInt(info.getId()), 0);
 					info.setFingerPinter1(fp);
-					System.out.println(fp);
 				}
 				if(info.isFp2Available()) {
 					String fp = getFingerPrint(Integer.parseInt(info.getId()), 1);
@@ -137,8 +136,6 @@ public class Timer {
 		int[] FPDataLen = new int[1];
 		int ret = tc400.CKT_GetFPTemplate(0, personId, fingerPrintId, FPData, FPDataLen);
 
-		System.out.println("length");
-		System.out.println(FPDataLen[0]);
 		if (ret == 3) {
 		   System.out.println("CKT_GetFPTemplate fail.  Person ID: %d, Finger print ID: %d is not existed\n");
 		}
@@ -152,7 +149,6 @@ public class Timer {
 		   // FPData 指向指纹数据
 //		   if (FPData)
 //			   CKT_FreeMemory(FPData);
-			System.out.println(FPData[0] + ":" + FPDataLen[0]);
 			Pointer p = new Pointer(FPData[0]);
 			byte[] bs = p.getByteArray(0, FPDataLen[0]);
 			for(int ind = 0; ind < bs.length; ind++) {
@@ -165,6 +161,5 @@ public class Timer {
 			}
 		}
 		return sb.toString();
-
 	}
 }
