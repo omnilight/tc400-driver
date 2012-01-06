@@ -41,4 +41,6 @@ interface Tc400Library extends Library{
 	 public int CKT_SetDeviceDate(int sno, char Year, byte Month, byte Day);
 	 
 	 public int CKT_SetDeviceTime(int sno, byte Hour, byte Minute, byte Second);
+	 
+	 public int CKT_DeletePersonInfo(int sno, int PersonID, int backupID);
 }

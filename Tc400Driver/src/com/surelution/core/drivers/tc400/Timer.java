@@ -201,7 +201,13 @@ public class Timer {
 			System.out.println("failed");
 		}
 		return null;
-		
+	}
+	
+	public void deletePerson(String personId) {
+		int ret = tc400.CKT_DeletePersonInfo(0, Integer.parseInt(personId), 0xff);
+		if(ret != 1) {
+			System.out.println("failed");
+		}
 	}
 	
 	private String getString(byte[] bs) {
