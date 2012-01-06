@@ -10,6 +10,8 @@ public class PersonInfo implements Serializable {
 	private String name;
 	private boolean fp1Available;
 	private boolean fp2Available;
+	private String fingerPinter1;
+	private String fingerPrinter2;
 	
 	public boolean isFp1Available() {
 		return fp1Available;
@@ -35,9 +37,19 @@ public class PersonInfo implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
+	public String getFingerPinter1() {
+		return fingerPinter1;
+	}
+	public void setFingerPinter1(String fingerPinter1) {
+		this.fingerPinter1 = fingerPinter1;
+	}
+	public String getFingerPrinter2() {
+		return fingerPrinter2;
+	}
+	public void setFingerPrinter2(String fingerPrinter2) {
+		this.fingerPrinter2 = fingerPrinter2;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
