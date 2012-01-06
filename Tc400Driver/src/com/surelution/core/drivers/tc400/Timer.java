@@ -3,6 +3,7 @@ package com.surelution.core.drivers.tc400;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -157,6 +158,50 @@ public class Timer {
 			}
 		}
 
+	}
+	
+	public void setDatetime(Date date) {
+		DatetimeInfoStructure struct = new DatetimeInfoStructure();
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH + 1);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int minute = c.get(Calendar.MINUTE);
+		int sec = c.get(Calendar.SECOND);
+		struct.Year = (byte)year;
+		struct.Month = (byte)month;
+		struct.Day = (byte)day;
+		struct.Hour = (byte)hour;
+		struct.Minute = (byte)minute;
+		struct.Second = (byte)sec;
+		int ret = tc400.CKT_GetDeviceClock(0, struct);
+		if(ret == 0) {
+			System.out.println("failed");
+		} else if(ret == 1) {
+			//succeed
+		}
+	}
+	
+	public Date getDatetime() {
+		DatetimeInfoStructure struct = new DatetimeInfoStructure();
+		int ret = tc400.CKT_GetDeviceClock(0, struct);
+		if(ret == 1) {
+			Calendar c = Calendar.getInstance();
+			int year = struct.Year;
+			int month = struct.Month - 1;
+			int day = struct.Day;
+			int hour = struct.Hour;
+			int minute = struct.Minute;
+			int sec = struct.Second;
+			c.set(year, month, day, hour, minute, sec);
+			return c.getTime();
+		} else if(ret == 1) {
+			System.out.println("failed");
+		}
+		return null;
+		
 	}
 	
 	private String getString(byte[] bs) {
