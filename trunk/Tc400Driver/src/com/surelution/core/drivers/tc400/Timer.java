@@ -111,15 +111,52 @@ public class Timer {
 			for(PersonInfo info : people) {
 				if(info.isFp1Available()) {
 					String fp = getFingerPrint(Integer.parseInt(info.getId()), 0);
-					info.setFingerPinter1(fp);
+					info.setFingerPrint1(fp);
 				}
 				if(info.isFp2Available()) {
 					String fp = getFingerPrint(Integer.parseInt(info.getId()), 1);
-					info.setFingerPrinter2(fp);
+					info.setFingerPrint2(fp);
 				}
 			}
 		}
 		return people;
+	}
+	
+	public void addPerson(PersonInfo person) {
+		PersonInfoStructure struct = new PersonInfoStructure();
+		struct.PersonID = Integer.parseInt(person.getId());
+		struct.FPMark = 0;//no finger print
+		struct.Other = 0;//non-admin user
+		
+		int ret = tc400.CKT_ModifyPersonInfo(0, struct);
+
+		if (ret == 1) {
+		   System.out.println("CKT_ModifyPersonInfo success. Add person information.\n");
+		} else if (ret == 0) {
+		   System.out.println("CKT_ModifyPersonInfo fail.\n");
+		}
+	}
+	
+	public void configFingerPrint(PersonInfo person) {
+		if(person.isFp1Available()) {
+			String[] data = person.getFingerPrint1().split(",");
+			byte[] bs = new byte[data.length];
+			for(int i = 0; i < data.length; i++) {
+				bs[i] = (byte)Integer.parseInt(data[i]);
+				tc400.CKT_PutFPTemplate(0, Integer.parseInt(person.getId()),
+						0, bs, data.length);
+			}
+		}
+		if(person.isFp2Available()) {
+			String[] data = person.getFingerPrint2().split(",");
+			byte[] bs = new byte[data.length];
+			for(int i = 0; i < data.length; i++) {
+				bs[i] = (byte)Integer.parseInt(data[i]);
+				tc400.CKT_PutFPTemplate(0, Integer.parseInt(person.getId()),
+						1, bs, data.length);
+			}
+		}
+
 	}
 	
 	private String getString(byte[] bs) {

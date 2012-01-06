@@ -33,4 +33,6 @@ interface Tc400Library extends Library{
 	 public int CKT_GetFPTemplate(int sno, int PersonID, int FPID, long[] pFPData, int[] pFPDataLen);
 	 
 	 public int CKT_PutFPTemplate(int sno, int PersonID, int FPID, byte[] pFPData, int FPDataLen);
+	 
+	 public int CKT_ModifyPersonInfo(int sno, PersonInfoStructure struct);
 }
