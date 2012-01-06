@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.sun.jna.Pointer;
-import com.sun.jna.ptr.PointerByReference;
 
 public class Timer {
 
@@ -161,22 +160,23 @@ public class Timer {
 	}
 	
 	public void setDatetime(Date date) {
-		DatetimeInfoStructure struct = new DatetimeInfoStructure();
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int year = c.get(Calendar.YEAR);
-		int month = c.get(Calendar.MONTH + 1);
+		int month = c.get(Calendar.MONTH);
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 		int sec = c.get(Calendar.SECOND);
-		struct.Year = (char)year;
-		struct.Month = (byte)month;
-		struct.Day = (byte)day;
-		struct.Hour = (byte)hour;
-		struct.Minute = (byte)minute;
-		struct.Second = (byte)sec;
-		int ret = tc400.CKT_GetDeviceClock(0, struct);
+		int ret = tc400.CKT_SetDeviceDate(0, (char)year, (byte)(month + 1), (byte)day);
+		
+		if(ret == 0) {
+			System.out.println("failed");
+			return;
+		} else if(ret == 1) {
+			ret = tc400.CKT_SetDeviceTime(0, (byte)hour, (byte)minute, (byte)sec);
+		}
+		
 		if(ret == 0) {
 			System.out.println("failed");
 		} else if(ret == 1) {
