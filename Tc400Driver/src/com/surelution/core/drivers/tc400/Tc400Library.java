@@ -38,5 +38,7 @@ interface Tc400Library extends Library{
 	 
 	 public int CKT_GetDeviceClock(int so, DatetimeInfoStructure datetime);
 	 
+	 public int CKT_SetDeviceDate(int sno, char Year, byte Month, byte Day);
+	 
 	 public int CKT_SetDeviceTime(int sno, byte Hour, byte Minute, byte Second);
 }
