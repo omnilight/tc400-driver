@@ -170,7 +170,7 @@ public class Timer {
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 		int sec = c.get(Calendar.SECOND);
-		struct.Year = (byte)year;
+		struct.Year = (char)year;
 		struct.Month = (byte)month;
 		struct.Day = (byte)day;
 		struct.Hour = (byte)hour;
