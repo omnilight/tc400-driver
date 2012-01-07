@@ -227,6 +227,10 @@ public class Timer {
 		return info;
 	}
 	
+	public void clearRecord() {
+		tc400.CKT_ClearClockingRecord(0, 0, 0);
+	}
+	
 	private String getString(byte[] bs) {
 		StringBuffer sb = new StringBuffer();
 		for(byte b : bs) {
