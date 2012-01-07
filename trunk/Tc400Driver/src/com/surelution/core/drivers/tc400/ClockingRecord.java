@@ -9,7 +9,7 @@ public class ClockingRecord implements Serializable {
 
 	private int  id; // 考勤机序列号
 	private int  personID;
-	private int  status; // 考勤状态
+	private ClockingRecord.Status  status; // 考勤状态
 	//备份号定义：位3-卡;位2-密码;位1-指纹2;位0-指纹1
 	private int  backupCode;
 	private int  workTyte;
@@ -18,7 +18,7 @@ public class ClockingRecord implements Serializable {
 	public ClockingRecord(int id, Date date, int status, int personId) {
 		this.id = id;
 		this.date = date;
-		this.status = status;
+		this.status = ClockingRecord.Status.parse(status);
 		this.personID = personId;
 	}
 
@@ -28,7 +28,7 @@ public class ClockingRecord implements Serializable {
 	public int getPersonID() {
 		return personID;
 	}
-	public int getStatus() {
+	public ClockingRecord.Status getStatus() {
 		return status;
 	}
 	public int getBackupCode() {
@@ -53,5 +53,22 @@ public class ClockingRecord implements Serializable {
 		sb.append(",date:");
 		sb.append(date);
 		return sb.toString();
+	}
+	
+	public static enum Status {
+
+		In(0), Out(1), Temp(2);
+		
+		private Status(int value) {
+		}
+		
+		public static Status parse(int value) {
+			for(Status status :Status.values()) {
+				if(status.ordinal() == value)
+					return status;
+			}
+			return Temp;
+		}
+		
 	}
 }
