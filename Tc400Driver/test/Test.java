@@ -54,8 +54,12 @@ public class Test {
 //		}
 		Timer timer = Timer.open();
 		
-		System.out.println(timer.getSerialNo());
 		
-		timer.deletePerson("1");
+		System.out.println(timer.getSerialNo());
+//		
+//		List<ClockingRecord> record = timer.getUnreadRecord();
+//		for(ClockingRecord r : record) {
+//			
+//		}
 	}
 }
