@@ -17,6 +17,8 @@ public class Timer {
 
 	private String serialNo;
 
+	private Timer() {}
+
 	public String getSerialNo() {
 		return serialNo;
 	}
@@ -55,6 +57,7 @@ public class Timer {
 					Date date;
 					try {
 						date = sdf.parse(dateString.toString());
+						System.out.println(clocking.Stat);
 						ClockingRecord cr = new ClockingRecord(clocking.ID,
 								date, clocking.Stat, clocking.PersonID);
 						record.add(cr);
@@ -208,6 +211,20 @@ public class Timer {
 		if(ret != 1) {
 			System.out.println("failed");
 		}
+	}
+	
+	public PersonInfo getPerson(String personId) {
+		PersonInfo info = null;
+		List<PersonInfo> people = getAllPeople();
+		if(people != null) {
+			for(PersonInfo pi : people) {
+				if(pi.getId().equals(personId)) {
+					info = pi;
+					break;
+				}
+			}
+		}
+		return info;
 	}
 	
 	private String getString(byte[] bs) {
