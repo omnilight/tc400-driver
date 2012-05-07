@@ -1,11 +1,14 @@
 package com.surelution.core.drivers.tc400;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.sun.jna.Pointer;
 
@@ -26,6 +29,15 @@ public class Timer {
 	public static Timer open() {
 		Timer timer = new Timer();
 		tc400.CKT_RegisterUSB(0, 0);
+		byte[] mmid = new byte[16];
+		tc400.CKT_GetMachineNumber(0, mmid);
+		timer.serialNo = new String(mmid);
+		return timer;
+	}
+
+	public static Timer openNet(String address) {
+		Timer timer = new Timer();
+		tc400.CKT_RegisterNet(0, address);
 		byte[] mmid = new byte[16];
 		tc400.CKT_GetMachineNumber(0, mmid);
 		timer.serialNo = new String(mmid);
@@ -95,7 +107,8 @@ public class Timer {
                     	pPeople[0] = pPeople[0] + ptemp;
                         PersonInfo pi = new PersonInfo();
                         pi.setId(String.valueOf(person.PersonID));
-                        pi.setName(getString(person.Name));
+                        pi.setName(getString(person.Name,"gb2312"));
+                        pi.setCardNo(person.CardNo + "");
                         if(person.FPMark == 1 || person.FPMark == 3) {
                         	pi.setFp1Available(true);
                         }
@@ -130,6 +143,25 @@ public class Timer {
 		struct.PersonID = Integer.parseInt(person.getId());
 		struct.FPMark = 0;//no finger print
 		struct.Other = 0;//non-admin user
+		String name = person.getName();
+		if(!StringUtils.isEmpty(name)) {
+			name = name.trim();
+			try {
+				byte[] bs = name.getBytes("gbk");
+				struct.Name = bs;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		String cardNo = person.getCardNo();
+		if(!StringUtils.isEmpty(cardNo)) {
+			try{
+				int i = Integer.parseInt(cardNo.trim());
+				struct.CardNo = i;
+			}catch(NumberFormatException e) {
+				
+			}
+		}
 		
 		int ret = tc400.CKT_ModifyPersonInfo(0, struct);
 
@@ -231,12 +263,42 @@ public class Timer {
 		tc400.CKT_ClearClockingRecord(0, 0, 0);
 	}
 	
-	private String getString(byte[] bs) {
-		StringBuffer sb = new StringBuffer();
-		for(byte b : bs) {
-			sb.append((char)b);
+//	private String getString(byte[] bs) {
+//		StringBuffer sb = new StringBuffer();
+//		for(byte b : bs) {
+//			sb.append((char)b);
+//		}
+//		return sb.toString().trim();
+//	}
+	
+	private String getString(byte[] bs, String encode) {
+		//不知道为什么从机器取出来name字段中，末尾会有一个2个byte的小尾巴
+		//或许是字段长度不对，或许是windows平台和java平台对字符串的编码
+		//处理的不一样，或许，这是一段错误的代码！
+		int length = 0;
+		for(; length < bs.length; length++) {
+			byte b = bs[length];
+			if(b == 0) {
+				break;
+			}
+			System.out.print(b);
+			System.out.print(",");
 		}
-		return sb.toString().trim();
+		byte[] bs2 = new byte[length];
+		for(int i = 0; i < length; i++) {
+			bs2[i] = bs[i];
+		}
+		System.out.println();
+		
+		String name = null;
+		try {
+			name = new String(bs2,encode);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		if(name != null)
+			name = name.trim();
+		return name;
 	}
 	
 	private String getFingerPrint(int personId, int fingerPrintId) {

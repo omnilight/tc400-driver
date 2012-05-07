@@ -13,7 +13,9 @@ interface Tc400Library extends Library{
 	 public int CKT_GetMachineNumber(int Sno,byte[] MMID);
 	 
 	 public int CKT_RegisterUSB(int Sno, int Index);
-	 
+
+	 public int CKT_RegisterNet(int Sno, String address);
+
 	 public int CKT_GetFPRawData(int Sno, int PersonID, int FPID, byte[] FPRawData);
 	 
 	 public int CKT_ReadRealtimeClocking(int[] ppClockings);

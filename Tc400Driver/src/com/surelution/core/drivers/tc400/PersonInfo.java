@@ -12,7 +12,14 @@ public class PersonInfo implements Serializable {
 	private boolean fp2Available;
 	private String fingerPint1;
 	private String fingerPrint2;
+	private String cardNo;
 	
+	public String getCardNo() {
+		return cardNo;
+	}
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
+	}
 	public boolean isFp1Available() {
 		return fp1Available;
 	}
@@ -69,6 +76,10 @@ public class PersonInfo implements Serializable {
 		}
 		if(fp2Available) {
 			sb.append(", finger 2 is available");
+		}
+		if(cardNo != null) {
+			sb.append(",card no:");
+			sb.append(cardNo);
 		}
 		return sb.toString();
 	}
